@@ -1,0 +1,219 @@
+import { CirclePacking } from '../../components/CirclePacking/CirclePacking'
+import styles from './Home.module.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCloudArrowDown, faFloppyDisk, faLink, faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { useEffect, useRef, useState } from 'react'
+import { AppDispatch, RootState } from '../../app/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { deleteSavedDiagramData, getDiagramData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
+import { faYoutube } from '@fortawesome/free-brands-svg-icons'
+import { fetchSavedList } from '../../features/savedDiagram/savedDiagramSlice'
+
+const Home = () => {
+    const dispatch = useDispatch<AppDispatch>();
+    
+    const [isLoading, setIsLoading] = useState(false)
+    const [isDiagramSaved, setIsDiagramSaved] = useState(false)
+    const [isLoadedSuccesfully, setIsLoadedSuccesfully] = useState(false)
+
+    const searchRef = useRef<HTMLInputElement>(null);
+
+    const [saved, setSaved] = useState("")
+
+    const diagram = useSelector((state: RootState) => state.diagram);
+
+    const savedDiagramList = useSelector((state: RootState) => state.savedDiagram.saved);
+
+    const youtubeList = useSelector((state: RootState) => state.youtubeList.list);
+    const isLoadingYoutubeList = useSelector((state: RootState) => state.youtubeList.loading);
+
+
+
+    const searchForYoutubeChannel = async (value: string) => {
+        if (value) {
+            setIsLoading(true); 
+            try {
+                await dispatch(getDiagramData({payload: value })).unwrap();
+            } catch {
+                setIsLoadedSuccesfully(true)
+                setTimeout(() => {
+                    setIsLoadedSuccesfully(false)
+                }, 4000)
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
+    const fetchSavedYoutubeLists = async () => {
+            setIsLoading(true);
+            try {
+                await dispatch(fetchSavedList());
+            } catch (error) {
+                console.error('Error fetching data:', error); 
+            } finally {
+                setSaved("1")
+                setIsLoading(false);
+            }
+    }
+
+    const saveDiagram = async () => {
+        if ((diagram.children?.length ?? 0) >= 1) {
+            setIsLoading(true);
+            try {
+                await dispatch(saveDiagramData({ payload: { ...diagram } }));
+            } catch (error) {
+                console.error('Error fetching data:', error); 
+            } finally {
+                setIsLoading(false);
+                setIsDiagramSaved(true)
+                fetchSavedYoutubeLists()
+                setTimeout(() => {
+                    setIsDiagramSaved(false)
+                }, 3000)
+            }
+        }
+    }
+
+    const loadSavedDiagram = async () => {
+        if (saved) {
+            setIsLoading(true);
+            try {
+                await dispatch(getSavedDiagramData({ payload: saved }));
+            } catch (error) {
+                console.error('Error fetching data:', error); 
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }
+
+    const deleteSavedDiagram = async () => {
+        if (saved) {
+            try {
+                await dispatch(deleteSavedDiagramData({ payload: saved }));
+            } catch (error) {
+                console.error('Error fetching data:', error); 
+            } finally {
+                setIsLoading(false);
+                fetchSavedYoutubeLists()
+                setSaved("1")
+            }
+        }
+    }
+
+
+    useEffect(() => {
+        fetchSavedYoutubeLists()
+    }, [])
+
+    const handleSearch = () => {
+        const searchValue = searchRef.current?.value; // Access the value from the ref
+        if (searchValue) {
+            searchForYoutubeChannel(searchValue)
+        }
+    };
+
+  return (
+    <main className={styles.main}>
+        <div className={styles.search}>
+            {/* <div className={styles.yt}>
+                <FontAwesomeIcon  icon={faYoutube} />
+            </div> */}
+            <input type="text" ref={searchRef} className={styles.searcher} placeholder="Youtube Channel" />
+            <button className={isLoading ? `${styles.icon} ${styles.loader}` : styles.icon} disabled={isLoading} onClick={handleSearch}>
+                {
+                    isLoading ? (
+                        <div className={styles.btnload}></div>
+                    ) : (
+                        <FontAwesomeIcon  icon={faYoutube} />
+                    )
+                }
+            </button>
+        </div>
+        <div className={styles.container}>
+            <div className={styles.diagram}>
+                <div className={styles.circle}>
+                    {
+                        isLoading ? (
+                            <div className={styles.loading}></div>
+                        ): (diagram.children?.length ?? 0) > 1 ? (
+                            <>
+                                <CirclePacking data={diagram} />
+                                {
+                                    isLoadedSuccesfully ? <div className={styles.notfound}>Channel Not Found !!</div> : null
+                                }
+                            </>
+                            
+                            
+                            
+                        ) : (
+                            <div className={styles.nodata}>Please Search...</div>
+                        )
+                    }
+                </div>
+                <div className={styles.buttons}>
+                    <button className={styles.btn} disabled={isLoading} onClick={saveDiagram}>Save <FontAwesomeIcon  icon={faFloppyDisk} /></button>
+                    <button className={styles.btn} disabled style={{ cursor: "not-allowed" }}>Download <FontAwesomeIcon  icon={faCloudArrowDown} /></button>
+                </div>
+                {
+                    isDiagramSaved ? <p className={styles.saved}>Saved Succesfully</p>: null
+                }
+            </div>
+            <div className={styles.bar}>
+                <div className={styles.saved}>
+                    <div className={styles.refresh} onClick={fetchSavedYoutubeLists}>
+                        <FontAwesomeIcon  icon={faRefresh} />
+                    </div>
+                    <div className={styles.select}>
+                        <select 
+                            className={styles.input} 
+                            value={saved}
+                            onChange={(e) => setSaved(e.target.value)} // Handle the change at the <select> level
+                            defaultValue="1"
+                        >
+                            <option defaultChecked disabled value="1">Select Saved Diagram</option>
+                            {
+                                savedDiagramList.map(dataName => (
+                                    <option key={dataName} value={dataName}>{dataName}</option> // Just set the value here
+                                ))
+                            }
+                        </select>
+                    </div>
+                    <button className={styles.load} onClick={loadSavedDiagram}>Load</button>
+                    <button className={styles.load} onClick={deleteSavedDiagram}>Delete</button>
+                </div>
+                <div className={styles.vids}>
+                    {
+                        youtubeList.length >= 1 ? (
+                            youtubeList.map(video => (
+                                <>
+                                    { isLoadingYoutubeList ? <div className={styles.youtubeloader}></div>: null }
+                                    <a key={video} className={styles.video} target='_blank' href={`https://www.youtube.com/watch?v=${video}`}>
+                                        {/* <div className={styles.thumbnail}>
+                                            <img src="/thumbnail.webp" alt="thumbnail" />
+                                        </div> */}
+                                        <div className={styles.info}>
+                                            <div className={styles.title}>https://www.youtube.com/watch?v={video}</div>
+                                            <div className={styles.icon}>
+                                                <FontAwesomeIcon  icon={faLink} />
+                                            </div>
+                                        </div>
+                                        {/* <iframe className={styles.iframe} id="ytplayer" width="100%" height="360"
+                                            src={`https://www.youtube.com/embed/${video}?autoplay=1&origin=http://localhost:5173`}
+                                            frameBorder="0">
+                                        </iframe> */}
+                                    </a>
+                                </>
+                            ))
+                        ) : <div className={styles.novideos}>Please Select dataset from diagram to load</div>
+                    }
+                </div>
+                
+            </div>
+        </div>
+    </main>
+  )
+}
+
+export default Home

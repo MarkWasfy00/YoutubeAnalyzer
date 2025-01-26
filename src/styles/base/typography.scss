@@ -1,0 +1,46 @@
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-ExtraLight.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 200; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-Light.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 300; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-Regular.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 400; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-Medium.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 500; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-SemiBold.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 600; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+@font-face {
+    font-family: 'Readex Pro'; /* Name of your font */
+    src: url('/fonts/ReadexPro-Bold.ttf') format('truetype'); /* Reference your .ttf file */
+    font-weight: 700; /* Define weight (e.g., normal, bold) */
+    font-style: normal; /* Define style (e.g., normal, italic) */
+}
+
+
+
+html {
+    font-size: 62.5%; /* This helps with rem calculations */
+}
+
+body {
+    font-family: 'Readex Pro', sans-serif;
+}

@@ -1,0 +1,277 @@
+@use "../../styles/reusable.all.scss" as *;
+
+
+.main {
+    background-color: $primary;
+    min-height: 100vh;
+    border-radius: 1rem;
+    max-width: 180rem;
+    margin: 0 auto;
+
+    .search {
+        height: 8rem;
+        font-size: 2rem;
+        @include flex(false, center, center);
+        gap: 1rem;
+
+        .yt {
+            font-size: 4rem;
+            color: $font-color;
+        }
+
+        .searcher {
+            padding: .5rem 2rem;
+            border-radius: 2rem;
+            border: none;
+            outline: none;
+            width: 30%;
+            height: 70%;
+            border: 1px solid $tertiary;
+            background-color: $font-color;
+        }
+
+        .icon {
+            @include flex(false, center, center);
+            background-color: $secondary;
+            box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+            color: $font-color;
+            border: 1px solid $tertiary;
+            margin-left: -5rem;
+            border-radius: 50%;
+            height: 5rem;
+            width: 5rem;
+            transition: .2s;
+            cursor: pointer;
+            position: relative;
+
+            .btnload {
+                position: absolute;
+                inset:  0 0 0 0;
+                background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="%23697565"></stop><stop offset=".3" stop-color="%23697565" stop-opacity=".9"></stop><stop offset=".6" stop-color="%23697565" stop-opacity=".6"></stop><stop offset=".8" stop-color="%23697565" stop-opacity=".3"></stop><stop offset="1" stop-color="%23697565" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(%23a2)" stroke-width="15" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="%23697565" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>');
+                background-repeat: no-repeat;
+                background-size: 2rem 2rem;
+                background-position: center;
+                cursor: progress;
+            }
+
+            &:hover {
+                color: $tertiary;
+                background-color: $font-color;
+            }
+        }
+
+        .loader {
+            color: $tertiary;
+            background-color: $font-color;
+        }
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 4fr 2fr;
+        padding: 1rem;
+        gap: 2rem;
+        height: 90vh;
+
+
+        .diagram {
+            @include flex(column);
+            gap: 2rem;
+            
+
+            .circle {
+                background-color: $secondary;
+                padding: 2rem;
+                border-radius: 2rem;
+                min-height: 80%;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid $tertiary;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+
+                .notfound {
+                    position: absolute;
+                    inset: 0 0 0 0;
+                    background-color: rgba(black, .8);
+                    font-size: 3rem;
+                    color: red;
+                    font-weight: 700;
+                    @include flex(false, center, center);
+                }
+
+                .loading {
+                    position: absolute;
+                    inset: 0 0 0 0;
+                    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="%23697565"></stop><stop offset=".3" stop-color="%23697565" stop-opacity=".9"></stop><stop offset=".6" stop-color="%23697565" stop-opacity=".6"></stop><stop offset=".8" stop-color="%23697565" stop-opacity=".3"></stop><stop offset="1" stop-color="%23697565" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(%23a2)" stroke-width="15" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="%23697565" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>');
+                    background-repeat: no-repeat;
+                    background-size: 10rem 10rem;
+                    background-position: center;
+                }
+
+                .nodata {
+                    position: absolute;
+                    inset: 0 0 0 0;
+                    font-size: 3rem;
+                    color: $font-color;
+                    font-style: italic;
+                    font-weight: 700;
+                    @include flex(false, center, center)
+                }
+
+               
+            }
+
+            .buttons {
+                @include flex(false, center, center);
+                gap: 1rem;
+                .btn {
+                    border: 1px solid $tertiary;
+                    outline: none;
+                    color: $font-color;
+                    padding: 1rem 2rem;
+                    border-radius: 1rem;
+                    font-size: 2rem;
+                    background-color: $secondary;
+                    transition: .2s;
+
+                    &:hover {
+                        background-color: $font-color;
+                        color: $tertiary;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .saved {
+                font-size: 2rem;
+                text-align: center;
+                color: green;
+            }
+
+
+        }
+
+        .bar {
+            height: 85vh;
+            min-width: 40rem;
+            overflow-y: auto;
+            color: $font-color;
+            
+
+            .saved {
+                height: 8%;
+                @include flex(false, center);
+                font-size: 2rem;
+                gap: 1rem;
+                .select {
+                    width: 80%;
+                    height: 70%;
+                    .input {
+                        border-radius: 1rem;
+                        height: 100%;
+                        width: 100%;
+                        border: none;
+                        outline: none;
+                        border: 1px solid $tertiary;
+                    }
+                }
+
+                .load {
+                    border: 1px solid $tertiary;
+                    outline: none;
+                    color: $font-color;
+                    padding: 1rem 2rem;
+                    border-radius: 1rem;
+                    font-size: 2rem;
+                    background-color: $secondary;
+                    transition: .2s;
+
+                    &:hover {
+                        background-color: $font-color;
+                        color: $tertiary;
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .vids {
+                height: 92%;
+                border-radius: 2rem;
+                overflow-x: hidden;
+                @include flex(column);
+                @include scroll-bar($primary, $tertiary);
+                position: relative;
+                gap: 1rem;
+                padding: 1rem;
+                background-color: $secondary;
+                border: 1px solid $tertiary;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    
+                .youtubeloader {
+                    position: absolute;
+                    inset: 0 0 0 0;
+                    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><radialGradient id="a2" cx=".66" fx=".66" cy=".3125" fy=".3125" gradientTransform="scale(1.5)"><stop offset="0" stop-color="%23697565"></stop><stop offset=".3" stop-color="%23697565" stop-opacity=".9"></stop><stop offset=".6" stop-color="%23697565" stop-opacity=".6"></stop><stop offset=".8" stop-color="%23697565" stop-opacity=".3"></stop><stop offset="1" stop-color="%23697565" stop-opacity="0"></stop></radialGradient><circle transform-origin="center" fill="none" stroke="url(%23a2)" stroke-width="15" stroke-linecap="round" stroke-dasharray="200 1000" stroke-dashoffset="0" cx="100" cy="100" r="70"><animateTransform type="rotate" attributeName="transform" calcMode="spline" dur="2" values="360;0" keyTimes="0;1" keySplines="0 0 1 1" repeatCount="indefinite"></animateTransform></circle><circle transform-origin="center" fill="none" opacity=".2" stroke="%23697565" stroke-width="15" stroke-linecap="round" cx="100" cy="100" r="70"></circle></svg>');
+                    background-repeat: no-repeat;
+                    background-size: 10rem 10rem;
+                    background-position: center;
+                    background-color: $secondary;
+                }
+    
+                .video {
+                    // padding: 1rem;
+                    transition: .2s;
+                    text-decoration: none;
+                    color: $font-color;
+                    // border: 3px solid $secondary;
+                    
+                    .iframe {
+                        border-radius: 2rem;
+                    }
+                    // &:hover {
+                    //     transform: scale(.9);
+                    // }
+    
+                    
+                   
+    
+                    .thumbnail {
+    
+                        img {
+                            border-radius: 1rem;
+                            width: 100%;
+                        }
+                    }
+    
+                    .info {
+                        @include flex(false, center, space-between);
+                        border: 1px solid $tertiary;
+                        padding: 1rem;
+                        border-radius: 2rem;
+                        .title {
+                            font-size: 1.2rem;
+                            font-weight: 700;
+                        }
+    
+                        .icon {
+                            font-size: 1.6rem;
+                            cursor: pointer;
+                        }
+                    }
+                }
+    
+                .novideos {
+                    font-size: 2rem;
+                    position: absolute;
+                    // inset: 0 0 0 0;
+                    text-align: center;
+                    font-weight: 700;
+                    font-style: italic;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+            }
+        }
+    }
+}

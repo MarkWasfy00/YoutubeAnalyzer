@@ -1,0 +1,56 @@
+@mixin flex-variant($display, $direction: false, $align: false, $justify: false, $wrap: false) {
+    display: $display;
+  
+    @if $direction {
+      flex-direction: $direction;
+    }
+  
+    @if $align {
+      align-items: $align;
+    }
+  
+    @if $justify {
+      justify-content: $justify;
+    }
+  
+    @if $wrap {
+      flex-wrap: $wrap;
+    }
+  
+    // fix
+    // & > * {
+    //   min-width: 0;
+    // }
+}
+
+@mixin flex($direction: false, $align: false, $justify: false, $wrap: false) {
+@include flex-variant(flex, $direction: $direction, $align: $align, $justify: $justify, $wrap: $wrap);
+}
+
+@mixin inline-flex($direction: false, $align: false, $justify: false, $wrap: false) {
+@include flex-variant(inline-flex, $direction: $direction, $align: $align, $justify: $justify, $wrap: $wrap);
+}
+
+
+@mixin gradient-text($degree, $color-1, $color-2) {
+  background: linear-gradient($degree, $color-1, $color-2);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@mixin scroll-bar($track, $thumb) {
+  &::-webkit-scrollbar {
+    width: 5px;
+    &-track {
+      background: $track;
+      border-radius: 2rem;
+    }
+
+    &-thumb {
+      background: $thumb;
+      width: 5px;
+      border-radius: 2rem;
+    }
+}
+
+}
