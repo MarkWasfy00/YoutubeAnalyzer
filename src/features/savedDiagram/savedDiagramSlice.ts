@@ -48,7 +48,7 @@ export const savedDiagramSlice = createSlice({
             .addCase(fetchSavedList.fulfilled, (state, action: PayloadAction<string[]>) => {
                 state.saved = action.payload;
             })
-            .addCase(fetchSavedList.rejected, (state, action) => {
+            .addCase(fetchSavedList.rejected, (_state, action) => {
                 console.error('Error fetching saved list:', action.payload);
             });
     },

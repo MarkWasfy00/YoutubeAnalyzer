@@ -100,7 +100,7 @@ export const diagramSlice = createSlice({
             state.name = action.payload.name;
             state.children = action.payload.children || [];
         });
-        builder.addCase(getSavedDiagramData.rejected, (state, action) => {
+        builder.addCase(getSavedDiagramData.rejected, (_state, action) => {
             console.error('Failed to fetch diagram data:', action.error);
         });
 
@@ -110,7 +110,7 @@ export const diagramSlice = createSlice({
             state.name = action.payload.name;
             state.children = action.payload.children || [];
         });
-        builder.addCase(getDiagramData.rejected, (state, action) => {
+        builder.addCase(getDiagramData.rejected, (_state, action) => {
             console.error('Failed to fetch diagram data:', action.error);
         });
     },
