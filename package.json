@@ -15,17 +15,18 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@nivo/circle-packing": "^0.88.0",
-    "@nivo/core": "^0.88.0",
     "@reduxjs/toolkit": "^2.5.0",
+    "circlepack-chart": "^1.10.2",
+    "d3": "^7.9.0",
+    "gsap": "^3.12.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.2.0",
-    "sass": "^1.83.4",
-    "use-debounce": "^10.0.4"
+    "sass": "^1.83.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/d3": "^7.4.3",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.5.0",

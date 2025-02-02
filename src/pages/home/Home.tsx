@@ -1,13 +1,14 @@
-import { CirclePacking } from '../../components/CirclePacking/CirclePacking'
 import styles from './Home.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCloudArrowDown, faFloppyDisk, faLink, faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft, faCaretRight, faCloudArrowDown, faFloppyDisk, faLink, faRefresh } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import { AppDispatch, RootState } from '../../app/store'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteSavedDiagramData, getDiagramData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
 import { faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { fetchSavedList } from '../../features/savedDiagram/savedDiagramSlice'
+import { gsap } from "gsap"
+import { NewCirclePackingChart } from '../../components/newCirclePacking/NewCirclePacking'
 
 const Home = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -15,8 +16,12 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isDiagramSaved, setIsDiagramSaved] = useState(false)
     const [isLoadedSuccesfully, setIsLoadedSuccesfully] = useState(false)
+    const [isExpanded, setIsExpanded] = useState(false)
 
     const searchRef = useRef<HTMLInputElement>(null);
+    const barRef = useRef<HTMLInputElement>(null);
+
+
 
     const [saved, setSaved] = useState("")
 
@@ -102,6 +107,16 @@ const Home = () => {
         }
     }
 
+    const collapse = () => {
+        gsap.to(barRef.current, { right: "-49rem" })
+        setIsExpanded(false)
+    }
+
+    const expand = () => {
+        gsap.to(barRef.current, { right: "0" })
+        setIsExpanded(true)
+    }
+
 
     useEffect(() => {
         fetchSavedYoutubeLists()
@@ -132,14 +147,15 @@ const Home = () => {
             </button>
         </div>
         <div className={styles.container}>
+
             <div className={styles.diagram}>
                 <div className={styles.circle}>
                     {
                         isLoading ? (
                             <div className={styles.loading}></div>
-                        ): (diagram.children?.length ?? 0) > 1 ? (
+                        ): (diagram.children?.length ?? 0) >= 1 ? (
                             <>
-                                <CirclePacking data={diagram} />
+                                <NewCirclePackingChart data={diagram} />
                                 {
                                     isLoadedSuccesfully ? <div className={styles.notfound}>Channel Not Found !!</div> : null
                                 }
@@ -155,12 +171,18 @@ const Home = () => {
                 <div className={styles.buttons}>
                     <button className={styles.btn} disabled={isLoading} onClick={saveDiagram}>Save <FontAwesomeIcon  icon={faFloppyDisk} /></button>
                     <button className={styles.btn} disabled style={{ cursor: "not-allowed" }}>Download <FontAwesomeIcon  icon={faCloudArrowDown} /></button>
-                </div>
-                {
-                    isDiagramSaved ? <p className={styles.saved}>Saved Succesfully</p>: null
-                }
+                </div> {  isDiagramSaved ? <p className={styles.saved}>Saved Succesfully</p>: null }
             </div>
-            <div className={styles.bar}>
+            <div ref={barRef} className={styles.bar}>
+                <div className={styles.collapse}>
+                  {
+                    isExpanded ? (
+                        <div className={styles.box} onClick={collapse}> <FontAwesomeIcon  icon={faCaretRight} /></div>
+                    ) : (
+                        <div className={styles.box} onClick={expand}> <FontAwesomeIcon  icon={faCaretLeft} /></div>
+                    )
+                  }
+                </div>
                 <div className={styles.saved}>
                     <div className={styles.refresh} onClick={fetchSavedYoutubeLists}>
                         <FontAwesomeIcon  icon={faRefresh} />

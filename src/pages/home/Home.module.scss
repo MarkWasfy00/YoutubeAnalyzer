@@ -3,16 +3,21 @@
 
 .main {
     background-color: $primary;
-    min-height: 100vh;
+    // min-height: 100vh;
+    height: 0;
     border-radius: 1rem;
     max-width: 180rem;
     margin: 0 auto;
 
     .search {
+        position: fixed;
+        left: 0;
+        right: 0;
         height: 8rem;
         font-size: 2rem;
         @include flex(false, center, center);
         gap: 1rem;
+        z-index: 999;
 
         .yt {
             font-size: 4rem;
@@ -67,27 +72,24 @@
     }
 
     .container {
-        display: grid;
-        grid-template-columns: 4fr 2fr;
+        // display: grid;
+        // grid-template-columns: 4fr 2fr;
         padding: 1rem;
         gap: 2rem;
-        height: 90vh;
+        
+
 
 
         .diagram {
             @include flex(column);
             gap: 2rem;
-            
+            position: fixed;
+            inset: 0 0 0 0 ;
 
             .circle {
-                background-color: $secondary;
-                padding: 2rem;
-                border-radius: 2rem;
-                min-height: 80%;
                 position: relative;
                 overflow: hidden;
-                border: 1px solid $tertiary;
-                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                height: 100%;
 
 
                 .notfound {
@@ -124,6 +126,10 @@
 
             .buttons {
                 @include flex(false, center, center);
+                position: fixed;
+                bottom: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
                 gap: 1rem;
                 .btn {
                     border: 1px solid $tertiary;
@@ -153,11 +159,31 @@
         }
 
         .bar {
-            height: 85vh;
-            min-width: 40rem;
-            overflow-y: auto;
+            width: 50rem;
+            // overflow-y: auto;
             color: $font-color;
+            // background-color: $primary;
+            padding: 1rem;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            right: -49rem;
+            z-index: 99999;
             
+            .collapse {
+                position: relative;
+                font-size: 2rem;
+                .box {
+                    position: absolute;
+                    background-color: $secondary;
+                    border-radius: 50%;
+
+                    width: 4rem;
+                    height: 4rem;
+                    @include flex(false, center, center);
+                    left: -5rem;
+                }
+            }
 
             .saved {
                 height: 8%;
@@ -196,7 +222,7 @@
             }
 
             .vids {
-                height: 92%;
+                height: 85%;
                 border-radius: 2rem;
                 overflow-x: hidden;
                 @include flex(column);
