@@ -1,6 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import CirclePack from 'circlepack-chart';
 import { scaleOrdinal, schemePaired } from 'd3';
+import { useDispatch } from 'react-redux';
+import { setList } from '../../features/youtubeList/youtubeListSlice';
+import 'd3-transition';
+
 
 interface Node {
   name: string;
@@ -45,6 +49,7 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
   const chartInstance = useRef<CirclePack | null>(null);
   const resizeObserver = useRef<ResizeObserver | null>(null);
   const color = scaleOrdinal(schemePaired);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -70,7 +75,13 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
         .excludeRoot(true) // Exclude the root node from rendering
         .tooltipContent((d, node) => `Videos: <i>${node.value}</i>`) // Add tooltips
         .width(chartRef.current.clientWidth)
-        .height(chartRef.current.clientHeight);
+        .transitionDuration(0)
+        .height(chartRef.current.clientHeight)
+        .onClick((data) => {
+          if (data?.videos_id) {
+            dispatch(setList(data.videos_id));
+          } 
+        })
     };
 
     createChart();

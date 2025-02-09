@@ -229,7 +229,7 @@
                 @include scroll-bar($primary, $tertiary);
                 position: relative;
                 gap: 1rem;
-                padding: 1rem;
+                padding: 3rem 1rem;
                 background-color: $secondary;
                 border: 1px solid $tertiary;
                 box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -262,18 +262,15 @@
                    
     
                     .thumbnail {
-    
                         img {
-                            border-radius: 1rem;
+                            border-radius: 2rem;
                             width: 100%;
                         }
                     }
     
                     .info {
-                        @include flex(false, center, space-between);
-                        border: 1px solid $tertiary;
+                        @include flex(false, center, center);
                         padding: 1rem;
-                        border-radius: 2rem;
                         .title {
                             font-size: 1.2rem;
                             font-weight: 700;

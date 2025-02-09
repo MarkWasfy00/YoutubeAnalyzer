@@ -1,6 +1,6 @@
 import styles from './Home.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretLeft, faCaretRight, faCloudArrowDown, faFloppyDisk, faLink, faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft, faCaretRight, faCloudArrowDown, faFloppyDisk, faRefresh } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import { AppDispatch, RootState } from '../../app/store'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,36 +9,37 @@ import { faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { fetchSavedList } from '../../features/savedDiagram/savedDiagramSlice'
 import { gsap } from "gsap"
 import { NewCirclePackingChart } from '../../components/newCirclePacking/NewCirclePacking'
+import Pagination from '../../components/Pagination/Pagination'
+
+
 
 const Home = () => {
     const dispatch = useDispatch<AppDispatch>();
-    
     const [isLoading, setIsLoading] = useState(false)
     const [isDiagramSaved, setIsDiagramSaved] = useState(false)
     const [isLoadedSuccesfully, setIsLoadedSuccesfully] = useState(false)
     const [isExpanded, setIsExpanded] = useState(false)
+    const [searchBar, setSearchBar] = useState("")
 
-    const searchRef = useRef<HTMLInputElement>(null);
     const barRef = useRef<HTMLInputElement>(null);
 
 
 
-    const [saved, setSaved] = useState("")
+    const [saved, setSaved] = useState("1")
 
     const diagram = useSelector((state: RootState) => state.diagram);
 
     const savedDiagramList = useSelector((state: RootState) => state.savedDiagram.saved);
 
-    const youtubeList = useSelector((state: RootState) => state.youtubeList.list);
+    const list = useSelector((state: RootState) => state.youtubeList.list);
+    const youtubeList = useSelector((state: RootState) => state.youtubeList.youtubeInfo);
     const isLoadingYoutubeList = useSelector((state: RootState) => state.youtubeList.loading);
-
-
 
     const searchForYoutubeChannel = async (value: string) => {
         if (value) {
             setIsLoading(true); 
             try {
-                await dispatch(getDiagramData({payload: value })).unwrap();
+                await dispatch(getDiagramData({ payload: value })).unwrap();
             } catch {
                 setIsLoadedSuccesfully(true)
                 setTimeout(() => {
@@ -123,11 +124,15 @@ const Home = () => {
     }, [])
 
     const handleSearch = () => {
-        const searchValue = searchRef.current?.value; // Access the value from the ref
-        if (searchValue) {
-            searchForYoutubeChannel(searchValue)
+
+        if (searchBar) {
+            searchForYoutubeChannel(searchBar)
         }
     };
+
+    const searchChange = (value: string) => {
+        setSearchBar(value)
+    }
 
   return (
     <main className={styles.main}>
@@ -135,7 +140,7 @@ const Home = () => {
             {/* <div className={styles.yt}>
                 <FontAwesomeIcon  icon={faYoutube} />
             </div> */}
-            <input type="text" ref={searchRef} className={styles.searcher} placeholder="Youtube Channel" />
+            <input type="text" onChange={(e) => searchChange(e.target.value)} className={styles.searcher} placeholder="Youtube Channel" />
             <button className={isLoading ? `${styles.icon} ${styles.loader}` : styles.icon} disabled={isLoading} onClick={handleSearch}>
                 {
                     isLoading ? (
@@ -160,9 +165,6 @@ const Home = () => {
                                     isLoadedSuccesfully ? <div className={styles.notfound}>Channel Not Found !!</div> : null
                                 }
                             </>
-                            
-                            
-                            
                         ) : (
                             <div className={styles.nodata}>Please Search...</div>
                         )
@@ -192,7 +194,7 @@ const Home = () => {
                             className={styles.input} 
                             value={saved}
                             onChange={(e) => setSaved(e.target.value)} // Handle the change at the <select> level
-                            defaultValue="1"
+                            // defaultValue="1"
                         >
                             <option defaultChecked disabled value="1">Select Saved Diagram</option>
                             {
@@ -207,29 +209,38 @@ const Home = () => {
                 </div>
                 <div className={styles.vids}>
                     {
-                        youtubeList.length >= 1 ? (
-                            youtubeList.map(video => (
-                                <>
-                                    { isLoadingYoutubeList ? <div className={styles.youtubeloader}></div>: null }
-                                    <a key={video} className={styles.video} target='_blank' href={`https://www.youtube.com/watch?v=${video}`}>
-                                        {/* <div className={styles.thumbnail}>
-                                            <img src="/thumbnail.webp" alt="thumbnail" />
-                                        </div> */}
-                                        <div className={styles.info}>
-                                            <div className={styles.title}>https://www.youtube.com/watch?v={video}</div>
-                                            <div className={styles.icon}>
-                                                <FontAwesomeIcon  icon={faLink} />
-                                            </div>
+                        list.length >= 1 ? (
+                            <>
+                                
+                                {
+                                    youtubeList.map(video => (
+                                        <div key={video.video_id}>
+                                            { isLoadingYoutubeList ? <div className={styles.youtubeloader}></div>: null }
+                                            <a className={styles.video} target='_blank' href={`https://www.youtube.com/watch?v=${video.video_id}`}>
+                                                <div className={styles.thumbnail}>
+                                                    <img src={video.thumbnail} alt="thumbnail" />
+                                                </div>
+                                                <div className={styles.info}>
+                                                    <div className={styles.title}>{video.title}</div>
+                                                    {/* <div className={styles.icon}>
+                                                        <FontAwesomeIcon  icon={faLink} />
+                                                    </div> */}
+                                                </div>
+                                                {/* <iframe className={styles.iframe} id="ytplayer" width="100%" height="360"
+                                                    src={`https://www.youtube.com/embed/${video}?autoplay=1&origin=http://localhost:5173`}
+                                                    frameBorder="0">
+                                                </iframe> */}
+                                            </a>
                                         </div>
-                                        {/* <iframe className={styles.iframe} id="ytplayer" width="100%" height="360"
-                                            src={`https://www.youtube.com/embed/${video}?autoplay=1&origin=http://localhost:5173`}
-                                            frameBorder="0">
-                                        </iframe> */}
-                                    </a>
-                                </>
-                            ))
+                                    ))
+                                }
+                                <div className={styles.pagination}>
+                                    <Pagination itemsPerPage={10} />
+                                </div>
+                            </>
                         ) : <div className={styles.novideos}>Please Select dataset from diagram to load</div>
                     }
+
                 </div>
                 
             </div>

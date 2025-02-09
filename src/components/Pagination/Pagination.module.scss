@@ -1,0 +1,51 @@
+@use "../../styles/reusable.all.scss" as *;
+
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+  
+    li {
+      margin: 0 5px;
+  
+      a {
+        text-decoration: none;
+        padding: .4rem 1rem;
+        border-radius: 5px;
+        border: 1px solid $tertiary;
+        color: $font-color;
+        font-weight: 500;
+        font-size: 1.5rem;
+        transition: all 0.3s ease;
+  
+        &:hover {
+          background-color: $tertiary;
+          color: #fff;
+        }
+      }
+  
+      &.selected a {
+        background-color: $tertiary;
+        color: white;
+        border-color: $tertiary;
+        font-weight: bold;
+      }
+  
+      &.disabled a {
+        color: #ccc;
+        pointer-events: none;
+      }
+    }
+  
+    .next a,
+    .previous a {
+      font-weight: bold;
+    }
+  
+    .break {
+      font-weight: bold;
+    }
+  }
+  
