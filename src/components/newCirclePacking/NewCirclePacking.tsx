@@ -66,7 +66,7 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
       // Create a new chart instance
       chartInstance.current = new CirclePack(chartRef.current)
         .data(chartData) // Use the provided or generated data
-        .color((d, info) => {
+        .color((_, info) => {
           // Calculate a shade of purple based on depth
           if (info) {
             const depth = info.depth; // Get the depth of the node
