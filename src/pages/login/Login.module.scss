@@ -1,0 +1,64 @@
+@use "../../styles/reusable.all.scss" as *;
+
+
+
+.login {
+    height: 100vh;
+    @include flex(false, center, center);
+    
+
+    .container {
+        background-color: $secondary;
+        padding: 3rem;
+        border-radius: 2rem;
+        border: 1px solid $tertiary;
+        box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+        min-height: 30rem;
+        min-width: 50rem;
+        @include flex(column, center, center);
+        font-size: 1.5rem;
+        gap: 1rem;
+
+        .title {
+            font-size: 3rem;
+            color: $font-color;
+            text-transform: uppercase;
+        }
+
+        .form {
+            @include flex(column);
+            width: 100%;
+            
+            gap: 1rem;
+            .formGroup {
+                @include flex(column, start);
+
+                input {
+                    padding: 1rem;
+                    width: 100%;
+                    border-radius: 1rem;
+                    outline: none;
+                    font-weight: 700;
+                    border: none;
+                    color: $secondary;
+                }
+            }
+
+            .button {
+                margin-top: 2rem;
+                border: 1px solid $tertiary;
+                padding: 1rem;
+                border-radius: 2rem;
+                background-color: $primary;
+                color: $font-color;
+                cursor: pointer;
+                transition: .2s;
+
+                &:hover {
+                    background-color: $font-color;
+                    color: $primary;
+                }
+            }
+        }
+    }
+}

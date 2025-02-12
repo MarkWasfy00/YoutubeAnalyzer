@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { API } from '../../utils/server';
+import { fetchWithAuth } from '../../utils/api';
 
 export interface SavedDiagramState {
     saved: string[];
@@ -15,7 +16,7 @@ export const fetchSavedList = createAsyncThunk<string[], void>(
     'savedDiagram/fetchSavedList',
     async (_, thunkAPI) => {
         try {
-            const response = await fetch(API.savedDiagram);
+            const response = await fetchWithAuth(API.savedDiagram);
             console.log(response);
             if (!response.ok) {
                 throw new Error('Failed to fetch saved list');

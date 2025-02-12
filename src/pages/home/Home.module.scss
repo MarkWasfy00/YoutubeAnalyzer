@@ -160,6 +160,8 @@
 
         .bar {
             width: 50rem;
+            @include flex(column);
+            gap: 1rem;
             // overflow-y: auto;
             color: $font-color;
             // background-color: $primary;
@@ -222,7 +224,7 @@
             }
 
             .vids {
-                height: 85%;
+                height: 80%;
                 border-radius: 2rem;
                 overflow-x: hidden;
                 @include flex(column);
@@ -269,13 +271,21 @@
                     }
     
                     .info {
-                        @include flex(false, center, center);
+                        @include flex(column);
                         padding: 1rem;
+                        gap: .5rem;
                         .title {
-                            font-size: 1.2rem;
+                            font-size: 1.5rem;
                             font-weight: 700;
                         }
     
+                        .views,
+                        .likes{
+                            font-size: 1.4rem;
+                            font-weight: 500;
+                        }
+
+
                         .icon {
                             font-size: 1.6rem;
                             cursor: pointer;
@@ -293,6 +303,46 @@
                     top: 50%;
                     left: 50%;
                     transform: translate(-50%, -50%);
+                }
+            }
+
+            .filter {
+                border-radius: 2rem;
+                overflow-x: hidden;
+                @include flex(false, center);
+                @include scroll-bar($primary, $tertiary);
+                position: relative;
+                gap: 1rem;
+                padding: 1rem;
+                background-color: $secondary;
+                border: 1px solid $tertiary;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+                .input {
+                    border-radius: 1rem;
+                    height: 100%;
+                    width: 100%;
+                    border: none;
+                    outline: none;
+                    border: 1px solid $tertiary;
+                    font-size: 2rem;
+                }
+
+                .filterbtn {
+                    border: 1px solid $tertiary;
+                    outline: none;
+                    color: $font-color;
+                    padding: 1rem 2rem;
+                    border-radius: 1rem;
+                    font-size: 2rem;
+                    background-color: $secondary;
+                    transition: .2s;
+
+                    &:hover {
+                        background-color: $font-color;
+                        color: $tertiary;
+                        cursor: pointer;
+                    }
                 }
             }
         }

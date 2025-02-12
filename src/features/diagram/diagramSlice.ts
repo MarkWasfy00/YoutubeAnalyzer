@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { API } from '../../utils/server';
+import { fetchWithAuth } from '../../utils/api';
 
 export interface DiagramState {
     id: string;
@@ -20,7 +21,7 @@ const initialState: DiagramState = {
 export const getDiagramData = createAsyncThunk(
     'diagram/getDiagramData',
     async ({ payload }: {  payload: string }) => {
-        const response = await fetch(API.diagram, {
+        const response = await fetchWithAuth(API.diagram, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,8 +41,26 @@ export const getDiagramData = createAsyncThunk(
 export const saveDiagramData = createAsyncThunk(
     'diagram/saveDiagramData',
     async ({ payload }: { payload: unknown }) => {
-        const response = await fetch(API.saveDiagram, {
+        const response = await fetchWithAuth(API.saveDiagram, {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            throw new Error('Failed to post data');
+        }
+        const data = await response.json();
+        return data;
+    }
+);
+
+export const deleteTagsFromDiagram = createAsyncThunk(
+    'diagram/deleteTagsFromDiagram',
+    async ({ payload }: { payload: unknown }) => {
+        const response = await fetchWithAuth(API.exclude, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -58,7 +77,7 @@ export const saveDiagramData = createAsyncThunk(
 export const getSavedDiagramData = createAsyncThunk(
     'diagram/getSavedDiagramData',
     async ({ payload }: { payload: string }) => {
-        const response = await fetch(`${API.loadDiagram}?name=${payload}`, {
+        const response = await fetchWithAuth(`${API.loadDiagram}?name=${payload}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -75,7 +94,7 @@ export const getSavedDiagramData = createAsyncThunk(
 export const deleteSavedDiagramData = createAsyncThunk(
     'diagram/deleteSavedDiagramData',
     async ({ payload }: { payload: string }) => {
-        const response = await fetch(`${API.deleteDiagram}?name=${payload}`, {
+        const response = await fetchWithAuth(`${API.deleteDiagram}?name=${payload}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -104,6 +123,15 @@ export const diagramSlice = createSlice({
             console.error('Failed to fetch diagram data:', action.error);
         });
 
+        builder.addCase(deleteTagsFromDiagram.fulfilled, (state, action: PayloadAction<DiagramState>) => {
+            // Update the state with the fetched data
+            state.name = action.payload.name;
+            state.children = action.payload.children || [];
+        });
+        builder.addCase(deleteTagsFromDiagram.rejected, (_state, action) => {
+            console.error('Failed to fetch diagram data:', action.error);
+        });
+
 
         builder.addCase(getDiagramData.fulfilled, (state, action: PayloadAction<DiagramState>) => {
             // Update the state with the fetched data
@@ -113,6 +141,9 @@ export const diagramSlice = createSlice({
         builder.addCase(getDiagramData.rejected, (_state, action) => {
             console.error('Failed to fetch diagram data:', action.error);
         });
+
+
+
     },
 });
 

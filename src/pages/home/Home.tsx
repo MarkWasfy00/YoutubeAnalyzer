@@ -1,15 +1,19 @@
 import styles from './Home.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCaretLeft, faCaretRight, faCloudArrowDown, faFloppyDisk, faRefresh } from '@fortawesome/free-solid-svg-icons'
+import { faCaretLeft, faCaretRight, faCloudArrowDown, faEye, faFloppyDisk, faRefresh, faThumbsUp } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import { AppDispatch, RootState } from '../../app/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteSavedDiagramData, getDiagramData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
+import { deleteSavedDiagramData, deleteTagsFromDiagram, getDiagramData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
 import { faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { fetchSavedList } from '../../features/savedDiagram/savedDiagramSlice'
 import { gsap } from "gsap"
 import { NewCirclePackingChart } from '../../components/newCirclePacking/NewCirclePacking'
 import Pagination from '../../components/Pagination/Pagination'
+import { isExpanded } from '../../features/youtubeList/youtubeListSlice'
+import { useNavigate } from 'react-router-dom'
+import { isTokenExpired } from '../../utils/utils'
+import { logout } from '../../features/auth/authSlice'
 
 
 
@@ -18,12 +22,23 @@ const Home = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [isDiagramSaved, setIsDiagramSaved] = useState(false)
     const [isLoadedSuccesfully, setIsLoadedSuccesfully] = useState(false)
-    const [isExpanded, setIsExpanded] = useState(false)
+    // const [isExpanded, setIsExpanded] = useState(false)
     const [searchBar, setSearchBar] = useState("")
-
+    const [excludeBar, setExcludeBar] = useState("")
     const barRef = useRef<HTMLInputElement>(null);
 
 
+
+    const navigate = useNavigate(); // Initialize useNavigate
+    const accessToken = useSelector((state: RootState) => state.auth.accessToken);
+
+    // Redirect to /login if user is not authenticated
+    useEffect(() => {
+        if (!accessToken || isTokenExpired(accessToken)) {
+            dispatch(logout()); // Clear Redux state and localStorage
+            navigate("/login"); // Redirect to login page
+          }
+    }, [accessToken, dispatch, navigate]);
 
     const [saved, setSaved] = useState("1")
 
@@ -31,9 +46,11 @@ const Home = () => {
 
     const savedDiagramList = useSelector((state: RootState) => state.savedDiagram.saved);
 
+
     const list = useSelector((state: RootState) => state.youtubeList.list);
     const youtubeList = useSelector((state: RootState) => state.youtubeList.youtubeInfo);
     const isLoadingYoutubeList = useSelector((state: RootState) => state.youtubeList.loading);
+    const youtubeBar = useSelector((state: RootState) => state.youtubeList.isExpanded);
 
     const searchForYoutubeChannel = async (value: string) => {
         if (value) {
@@ -94,6 +111,19 @@ const Home = () => {
         }
     }
 
+    const excludeTagsFromDiagram = async () => {
+        if (saved) {
+            setIsLoading(true);
+            try {
+                await dispatch(deleteTagsFromDiagram({ payload: {  ...diagram, tags_to_delete: excludeBar.split(",") } }));
+            } catch (error) {
+                console.error('Error fetching data:', error); 
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    }
+
     const deleteSavedDiagram = async () => {
         if (saved) {
             try {
@@ -110,13 +140,21 @@ const Home = () => {
 
     const collapse = () => {
         gsap.to(barRef.current, { right: "-49rem" })
-        setIsExpanded(false)
+        dispatch(isExpanded(false));
     }
 
     const expand = () => {
         gsap.to(barRef.current, { right: "0" })
-        setIsExpanded(true)
+        dispatch(isExpanded(true));
     }
+
+    useEffect(() => {
+        if (youtubeBar) {
+            gsap.to(barRef.current, { right: "0" })
+        } else {
+            gsap.to(barRef.current, { right: "-49rem" })
+        }
+    },[youtubeBar])
 
 
     useEffect(() => {
@@ -178,7 +216,7 @@ const Home = () => {
             <div ref={barRef} className={styles.bar}>
                 <div className={styles.collapse}>
                   {
-                    isExpanded ? (
+                    youtubeBar ? (
                         <div className={styles.box} onClick={collapse}> <FontAwesomeIcon  icon={faCaretRight} /></div>
                     ) : (
                         <div className={styles.box} onClick={expand}> <FontAwesomeIcon  icon={faCaretLeft} /></div>
@@ -222,6 +260,8 @@ const Home = () => {
                                                 </div>
                                                 <div className={styles.info}>
                                                     <div className={styles.title}>{video.title}</div>
+                                                    <div className={styles.views}><FontAwesomeIcon  icon={faEye} /> {video.views}</div>
+                                                    <div className={styles.likes}><FontAwesomeIcon  icon={faThumbsUp} /> {video.likes}</div>
                                                     {/* <div className={styles.icon}>
                                                         <FontAwesomeIcon  icon={faLink} />
                                                     </div> */}
@@ -241,6 +281,12 @@ const Home = () => {
                         ) : <div className={styles.novideos}>Please Select dataset from diagram to load</div>
                     }
 
+                </div>
+                <div className={styles.filter}>
+                    <input className={styles.input} value={excludeBar} onChange={(e) => setExcludeBar(e.target.value)} placeholder='Exclude tags with ,' type="text" />
+                    <button onClick={excludeTagsFromDiagram} className={styles.filterbtn}>
+                        Exclude
+                    </button>
                 </div>
                 
             </div>

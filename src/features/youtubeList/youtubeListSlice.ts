@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { API } from '../../utils/server';
+import { fetchWithAuth } from '../../utils/api';
 
 
 interface Video {
@@ -16,19 +17,21 @@ export interface YoutubeListState {
     list: string[];
     youtubeInfo: Video[];
     loading: boolean;
+    isExpanded: boolean;
 }
 
 const initialState: YoutubeListState = {
     list: [],
     youtubeInfo: [],
     loading: false,
+    isExpanded: false,
 };
 
 
 export const sendYoutubeLinks = createAsyncThunk(
     'youtubeList/sendYoutubeLinks',
     async (videoIds: string[]) => {
-        const response = await fetch(API.fetchYoutubeData, {
+        const response = await fetchWithAuth(API.fetchYoutubeData, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -67,6 +70,9 @@ export const youtubeListSlice = createSlice({
         setLoading: (state, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         },
+        isExpanded: (state, action: PayloadAction<boolean>) => {
+            state.isExpanded = action.payload;
+        }
     },
 
     extraReducers: (builder) => {
@@ -84,6 +90,6 @@ export const youtubeListSlice = createSlice({
     },
 });
 
-export const { setList, unsetList, setLoading } = youtubeListSlice.actions;
+export const { setList, unsetList, setLoading, isExpanded } = youtubeListSlice.actions;
 
 export default youtubeListSlice.reducer;

@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import CirclePack from 'circlepack-chart';
-import { scaleOrdinal, schemePaired } from 'd3';
 import { useDispatch } from 'react-redux';
-import { setList } from '../../features/youtubeList/youtubeListSlice';
+import { isExpanded, setList } from '../../features/youtubeList/youtubeListSlice';
 import 'd3-transition';
-
 
 interface Node {
   name: string;
@@ -48,7 +46,6 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
   const chartRef = useRef<HTMLDivElement | null>(null);
   const chartInstance = useRef<CirclePack | null>(null);
   const resizeObserver = useRef<ResizeObserver | null>(null);
-  const color = scaleOrdinal(schemePaired);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -69,7 +66,20 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
       // Create a new chart instance
       chartInstance.current = new CirclePack(chartRef.current)
         .data(chartData) // Use the provided or generated data
-        .color((d) => color(d.name)) // Color nodes by name
+        .color((d, info) => {
+          // Calculate a shade of purple based on depth
+          if (info) {
+            const depth = info.depth; // Get the depth of the node
+            const maxDepth = 5; // Set a maximum depth for normalization
+            const lightness = Math.max(10, 50 - (depth / maxDepth) * 40);
+        
+            // Ensure lightness stays within a valid range (20% to 100%)
+            const clampedLightness = Math.max(20, Math.min(100, lightness));
+            return `hsl(280, 100%, ${clampedLightness}%)`; // HSL color with purple hue (280°)
+          } else {
+            return 'hsl(280, 100%, 50%)'; // Fallback purple color if info is not available
+          }
+        })        
         .showLabels(true) // Hide labels for better performance with large datasets
         .minCircleRadius(8) // Set a minimum circle radius to avoid clutter
         .excludeRoot(false) // Exclude the root node from rendering
@@ -80,8 +90,9 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
         .onClick((data) => {
           if (data?.videos_id) {
             dispatch(setList(data.videos_id));
-          } 
-        })
+            dispatch(isExpanded(true));
+          }
+        });
     };
 
     createChart();

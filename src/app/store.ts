@@ -2,13 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import diagramReducer from "../features/diagram/diagramSlice"
 import youtubeListReducer from '../features/youtubeList/youtubeListSlice'
 import savedDiagramReducer from "../features/savedDiagram/savedDiagramSlice"
-
+import authReducer from "../features/auth/authSlice"
 
 export const store = configureStore({
   reducer: {
     diagram: diagramReducer,
     savedDiagram: savedDiagramReducer,
-    youtubeList: youtubeListReducer
+    youtubeList: youtubeListReducer,
+    auth: authReducer
   },
 })
 
