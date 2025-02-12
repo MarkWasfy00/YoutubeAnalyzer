@@ -83,7 +83,7 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
         .showLabels(true) // Hide labels for better performance with large datasets
         .minCircleRadius(8) // Set a minimum circle radius to avoid clutter
         .excludeRoot(false) // Exclude the root node from rendering
-        .tooltipContent((d, node) => `Videos: <i>${node.data.value}</i>`) // Add tooltips
+        .tooltipContent((_, node) => `Videos: <i>${node.data.value}</i>`) // Add tooltips
         .width(chartRef.current.clientWidth)
         .transitionDuration(0)
         .height(chartRef.current.clientHeight)
