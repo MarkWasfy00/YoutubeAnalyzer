@@ -272,8 +272,10 @@ const Home = () => {
                                                 </div>
                                                 <div className={styles.info}>
                                                     <div className={styles.title}>{video.title}</div>
-                                                    <div className={styles.views}><FontAwesomeIcon  icon={faEye} /> {formatNumberWithSymbol(video.views)}</div>
-                                                    <div className={styles.likes}><FontAwesomeIcon  icon={faThumbsUp} /> {formatNumberWithSymbol(video.likes)}</div>
+                                                    <div className={styles.stats}>
+                                                        <div className={styles.views}><FontAwesomeIcon  icon={faEye} /> {formatNumberWithSymbol(video.views)}</div>
+                                                        <div className={styles.likes}><FontAwesomeIcon  icon={faThumbsUp} /> {formatNumberWithSymbol(video.likes)}</div>
+                                                    </div>
                                                     {/* <div className={styles.icon}>
                                                         <FontAwesomeIcon  icon={faLink} />
                                                     </div> */}

@@ -264,7 +264,9 @@
                    
     
                     .thumbnail {
+                        width: 100%;
                         img {
+                            object-fit: fill;
                             border-radius: 2rem;
                             width: 100%;
                         }
@@ -279,12 +281,26 @@
                             font-weight: 700;
                         }
     
-                        .views,
-                        .likes{
-                            font-size: 1.4rem;
-                            font-weight: 500;
-                        }
+                        .stats {
+                            @include flex(false, center);
+                            gap: 2rem;
 
+                            .views,
+                            .likes{
+                                font-size: 1.5rem;
+                                font-weight: 600;
+                            }
+
+                            .views {
+                                color: rgb(31, 255, 236);
+                            }
+                            
+                            .likes {
+                                color: rgb(39, 240, 39);
+                            }
+
+
+                        }
 
                         .icon {
                             font-size: 1.6rem;
