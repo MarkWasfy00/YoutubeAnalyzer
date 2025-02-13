@@ -1,4 +1,4 @@
-const SERVER = "http://85.239.240.70:8000"
+const SERVER = "https://stanleymovinctopsecretanalyticswebsitelmao.dk"
 
 
 export const API = {
