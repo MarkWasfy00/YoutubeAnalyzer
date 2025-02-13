@@ -138,6 +138,18 @@ const Home = () => {
         }
     }
 
+    const formatNumberWithSymbol = (num: number): string =>  {
+        if (num >= 1000000) {
+            const value = (num / 1000000).toFixed(1);
+            return value.endsWith('.0') ? `${value.slice(0, -2)}M` : `${value}M`;
+        } else if (num >= 1000) {
+            const value = (num / 1000).toFixed(1);
+            return value.endsWith('.0') ? `${value.slice(0, -2)}K` : `${value}K`;
+        } else {
+            return num.toString();
+        }
+    }
+
     const collapse = () => {
         gsap.to(barRef.current, { right: "-49rem" })
         dispatch(isExpanded(false));
@@ -260,8 +272,8 @@ const Home = () => {
                                                 </div>
                                                 <div className={styles.info}>
                                                     <div className={styles.title}>{video.title}</div>
-                                                    <div className={styles.views}><FontAwesomeIcon  icon={faEye} /> {video.views}</div>
-                                                    <div className={styles.likes}><FontAwesomeIcon  icon={faThumbsUp} /> {video.likes}</div>
+                                                    <div className={styles.views}><FontAwesomeIcon  icon={faEye} /> {formatNumberWithSymbol(video.views)}</div>
+                                                    <div className={styles.likes}><FontAwesomeIcon  icon={faThumbsUp} /> {formatNumberWithSymbol(video.likes)}</div>
                                                     {/* <div className={styles.icon}>
                                                         <FontAwesomeIcon  icon={faLink} />
                                                     </div> */}
