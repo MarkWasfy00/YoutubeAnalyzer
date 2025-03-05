@@ -91,6 +91,23 @@ export const getSavedDiagramData = createAsyncThunk(
     }
 );
 
+export const getSavedCachedData = createAsyncThunk(
+    'diagram/getSavedCachedData',
+    async () => {
+        const response = await fetchWithAuth(`${API.cachedDiagram}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to post data');
+        }
+        const data = await response.json();
+        return data;
+    }
+);
+
 export const deleteSavedDiagramData = createAsyncThunk(
     'diagram/deleteSavedDiagramData',
     async ({ payload }: { payload: string }) => {
@@ -120,6 +137,15 @@ export const diagramSlice = createSlice({
             state.children = action.payload.children || [];
         });
         builder.addCase(getSavedDiagramData.rejected, (_state, action) => {
+            console.error('Failed to fetch diagram data:', action.error);
+        });
+
+        builder.addCase(getSavedCachedData.fulfilled, (state, action: PayloadAction<DiagramState>) => {
+            // Update the state with the fetched data
+            state.name = action.payload.name;
+            state.children = action.payload.children || [];
+        });
+        builder.addCase(getSavedCachedData.rejected, (_state, action) => {
             console.error('Failed to fetch diagram data:', action.error);
         });
 

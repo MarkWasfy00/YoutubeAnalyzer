@@ -6,6 +6,7 @@ export const API = {
     savedDiagram: `${SERVER}/api/categorized-video-names/`,
     saveDiagram: `${SERVER}/api/save-categorized-videos/`,
     loadDiagram: `${SERVER}/api/fetch-categorized-videos/`,
+    cachedDiagram: `${SERVER}/api/reload_last_State/`,
     deleteDiagram: `${SERVER}/api/delete-categorized-videos/`,
     fetchYoutubeData: `${SERVER}/api/fetch_youtube_data/`,
     login: `${SERVER}/api/login/`,

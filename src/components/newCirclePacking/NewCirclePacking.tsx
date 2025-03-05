@@ -80,12 +80,12 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
             return 'hsl(280, 100%, 50%)'; // Fallback purple color if info is not available
           }
         })        
-        .showLabels(true) // Hide labels for better performance with large datasets
-        .minCircleRadius(8) // Set a minimum circle radius to avoid clutter
+        .showLabels(d => d.r > 15) // Hide labels for better performance with large datasets
+        .minCircleRadius(25) // Set a minimum circle radius to avoid clutter
         .excludeRoot(false) // Exclude the root node from rendering
         .tooltipContent((_, node) => `Videos: <i>${node.data.value}</i>`) // Add tooltips
         .width(chartRef.current.clientWidth)
-        .transitionDuration(0)
+        .transitionDuration(500)
         .height(chartRef.current.clientHeight)
         .onClick((data) => {
           if (data?.videos_id) {
@@ -99,10 +99,12 @@ export const NewCirclePackingChart: React.FC<CirclePackingChartProps> = ({ data 
 
     // Observe size changes to dynamically adjust chart dimensions
     resizeObserver.current = new ResizeObserver(() => {
-      if (chartInstance.current && chartRef.current) {
-        chartInstance.current.width(chartRef.current.clientWidth);
-        chartInstance.current.height(chartRef.current.clientHeight);
-      }
+      requestAnimationFrame(() => {
+        if (chartInstance.current && chartRef.current) {
+          chartInstance.current.width(chartRef.current.clientWidth);
+          chartInstance.current.height(chartRef.current.clientHeight);
+        }
+      });
     });
 
     resizeObserver.current.observe(chartRef.current);

@@ -4,7 +4,7 @@ import { faCaretLeft, faCaretRight, faCloudArrowDown, faEye, faFloppyDisk, faRef
 import { useEffect, useRef, useState } from 'react'
 import { AppDispatch, RootState } from '../../app/store'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteSavedDiagramData, deleteTagsFromDiagram, getDiagramData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
+import { deleteSavedDiagramData, deleteTagsFromDiagram, getDiagramData, getSavedCachedData, getSavedDiagramData, saveDiagramData } from '../../features/diagram/diagramSlice'
 import { faYoutube } from '@fortawesome/free-brands-svg-icons'
 import { fetchSavedList } from '../../features/savedDiagram/savedDiagramSlice'
 import { gsap } from "gsap"
@@ -159,6 +159,29 @@ const Home = () => {
         gsap.to(barRef.current, { right: "0" })
         dispatch(isExpanded(true));
     }
+    
+    const handleSearch = () => {
+        
+        if (searchBar) {
+            searchForYoutubeChannel(searchBar)
+        }
+    };
+    
+    const searchChange = (value: string) => {
+        setSearchBar(value)
+    }
+
+    const loadCachedData = async () => {
+        setIsLoading(true);
+        try {
+            await dispatch(getSavedCachedData());
+        } catch (error) {
+            console.error('Error fetching data:', error); 
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
 
     useEffect(() => {
         if (youtubeBar) {
@@ -168,21 +191,13 @@ const Home = () => {
         }
     },[youtubeBar])
 
-
     useEffect(() => {
         fetchSavedYoutubeLists()
     }, [])
 
-    const handleSearch = () => {
-
-        if (searchBar) {
-            searchForYoutubeChannel(searchBar)
-        }
-    };
-
-    const searchChange = (value: string) => {
-        setSearchBar(value)
-    }
+    useEffect(() => {
+        loadCachedData()
+    }, [1])
 
   return (
     <main className={styles.main}>
